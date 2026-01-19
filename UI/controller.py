@@ -45,6 +45,7 @@ class Controller:
 
     def handle_best_prodotti(self, e):
         """ Handler per gestire la ricerca dei prodotti migliori """
+        # grafo orientato, quindi devo prendere archi uscenti e archi entranti
         lista_prodotti=[]
         for nodo in self._model.G.nodes():
             somma=0
