@@ -46,7 +46,6 @@ class DAO:
     @staticmethod
     def get_prodotti(categoria):
         conn = DBConnect.get_connection()
-
         results = []
 
         cursor = conn.cursor(dictionary=True)
@@ -56,7 +55,7 @@ class DAO:
         cursor.execute(query,(categoria,))
 
         for row in cursor:
-            results.append(Prodotti(row['id'], row['product_name']))
+            results.append(Prodotti(row['id'], row['product_name'])) # questi sono i noti quindi preso tutto
 
         cursor.close()
         conn.close()
@@ -86,6 +85,9 @@ class DAO:
         cursor.close()
         conn.close()
         return results
+
+
+# ho messo maggiore, uguale perche in questo modo può ritornare due archi visto che il grafo e orientato e pesato
 
 
 

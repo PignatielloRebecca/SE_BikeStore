@@ -31,6 +31,8 @@ class View:
 
         # Riga 1
         self.dd_category = ft.Dropdown(label="Categoria", width=200)# TODO: Gestire il dropdown
+        # popolo la categoria
+
         for (c,v) in self.controller.popola_categoria().items():
             self.dd_category.options.append(ft.dropdown.Option(key=str(c), text=str(v.category_name)))
 

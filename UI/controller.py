@@ -27,7 +27,7 @@ class Controller:
     def popola_categoria(self):
         dizionario={}
         for c in DAO.read_categorie_biciclette():
-            dizionario[c.id] = c
+            dizionario[c.id] = c  # identifico la categoria con l'oggetto e posso prendere poi l'id
         return dizionario
 
     def handle_crea_grafo(self, e):
@@ -64,8 +64,42 @@ class Controller:
             self._view.txt_risultato.controls.append(ft.Text(f"{nome} ----> {s}"))
         self._view.page.update()
 
+        # adesso devo implementare la dropdown con i prodotti piu venduti
+        for (c,v) in self._model._map_nodi.items():
+            self._view.dd_prodotto_iniziale.options.append(ft.dropdown.Option(key=str(c), text=str(v.product_name)))
+
+        self._view.page.update()
+
+        for (c, v) in self._model._map_nodi.items():
+            self._view.dd_prodotto_finale.options.append(ft.dropdown.Option(key=str(c), text=str(v.product_name)))
+
+        self._view.page.update()
         # TODO
 
     def handle_cerca_cammino(self, e):
         """ Handler per gestire il problema ricorsivo di ricerca del cammino """
+        self._view.txt_risultato.controls.clear()  # pulisco i risultati precendeti della dropdown
+
+        try:
+            prodotto_iniziale = int(self._view.dd_prodotto_iniziale.value)
+            prodotto_finale = int(self._view.dd_prodotto_finale.value)
+            lunghezza = int(self._view.txt_lunghezza_cammino.value)
+        except (ValueError, TypeError):
+            self._view.txt_risultato.controls.append(ft.Text("Inserisci valori validi"))
+            self._view.page.update()
+            return
+
+        cammino, peso=self._model.ricerca_cammino_minimo(prodotto_iniziale, prodotto_finale, lunghezza)
+
+        if not cammino:
+            self._view.txt_risultato.controls.append(ft.Text("Nessun cammino trovato"))
+        else:
+            for id in cammino:
+                nome = self._model._map_nodi[id].product_name
+                self._view.txt_risultato.controls.append(ft.Text(f"{nome}"))
+            self._view.txt_risultato.controls.append(ft.Text(f"Somma dei pesi: {peso}"))
+
+            # aggiornamento finale della pagina
+        self._view.page.update()
+
         # TODO
