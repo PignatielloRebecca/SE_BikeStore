@@ -89,6 +89,26 @@ class DAO:
 
 # ho messo maggiore, uguale perche in questo modo può ritornare due archi visto che il grafo e orientato e pesato
 
+"""
+select distinct p1.id, p2.id, (p1.vendite + p2.vendite) as peso
+from (select p.id, count(*) as vendite 
+		from product p, order_item oi, `order` o 
+		where p.id=oi.product_id and oi.order_id =o.id and o.order_date between '2016-01-01' and '2018-12-28' and 
+		p.id in (select distinct p.id  
+						from product p, category c 
+						where p.category_id =c.id and c.id=7)
+		group by p.id) p1,
+	(select p.id, count(*) as vendite 
+		from product p, order_item oi, `order` o 
+		where p.id=oi.product_id and oi.order_id =o.id and o.order_date between '2016-01-01' and '2018-12-28' and 
+		p.id in (select distinct p.id  
+						from product p, category c 
+						where p.category_id =c.id and c.id=7)
+		group by p.id) p2
+where p1.id <> p2.id and p1.vendite>= p2.vendite 
+order by (p1.vendite + p2.vendite) desc 
+"""
+
 
 
 
